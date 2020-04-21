@@ -43,25 +43,25 @@ server = app.server
 app.title = "covid_19 Dashboard"
 
 app.layout = html.Div(
-    style={ 'font-family':"Courier New, monospace" },
+    style={ 'font-family':"Courier New, monospace"},
     children=[
     html.H1('Dashboard of  Coronavirus (COVID-19)',style={'color': '#a8a222'}),
     html.Div(className="row", children=[
-        html.Div(className="four columns", children=[
-            html.H5('Country',style={'color': '#296665'}),
+        html.Div(className="three columns", children=[
+            html.H5('Country',style={'color': '#296665',}),
             dcc.Dropdown(
                 id='country',
                 options=[{'label':c, 'value':c} for c in countries],
                 value='Italy'
             )
         ]),
-        html.Div(className="four columns", children=[
+        html.Div(className="three columns", children=[
             html.H5('State / Province',style={'color': '#296665'}),
             dcc.Dropdown(
                 id='state'
             )
         ]),
-        html.Div(className="four columns", children=[
+        html.Div(className="three columns", children=[
             html.H5('Selected Metrics',style={'color': '#296665'}),
             dcc.Checklist(
                 id='metrics',
@@ -89,7 +89,9 @@ app.layout = html.Div(
     dcc.Graph(id='indiamap'),
     html.H3('State wise chart of Coronavirus (COVID-19) in India',style={'color':'#a8a222'}),
     html.Div(id='output-data-upload'),
-    #html.Div(html.H5('@ Mahesh Sai',style={'color':'#583b69'}))
+    html.Div(className="row",children=[
+    html.H5('@ Mahesh Sai',style={'color':'#583b69'})
+    ])
 
 ])
 
@@ -121,7 +123,7 @@ def nonreactive_data2(country, state):
     return data
 def barchart(data, metrics, prefix="", yaxisTitle=""):
     figure = go.Figure(data=[
-        go.Line(
+        go.Scatter(
             name=metric, x=data.ObservationDate, y=data[metric],
             marker_line_color='rgb(0,0,0)', marker_line_width=1,
             marker_color={ 'Deaths':'rgb(200,30,98)', 'Recovered':'rgb(30,200,30)', 'Confirmed':'rgb(100,200,240)'}[metric]
@@ -201,10 +203,11 @@ def makeScatterMap():
 		lon=world_data['longitude'],
 		text=world_data['Country']+'\n'+'Confirmed : '+(world_data['Confirmed'])+'\n'+'Deaths : '+(world_data['Deaths']),
 		marker=dict(
-			color=(world_data['Recovered']%100)*0.01,
-			size=7,
+			color="rgb(151, 0, 0)",
+			size=10,
+            symbol = 10,
 
-			opacity=0.7))
+			opacity=1))
 
 	]
 	fig=go1.Figure(data=data)
@@ -226,10 +229,11 @@ def makeScatterMapindia():
 		lon=data1['Longitude'],
 		text=data1['Name of State / UT']+'\n'+'Confirmed : '+(data1['Total cases'])+'\n'+'Deaths : '+(data1['Deaths']),
 		marker=dict(
-			color=(data1['Active cases']%100)*0.01,
-			size=7,
+			color="rgb(150,0,0)",
+            symbol=10,
+			size=12,
 
-			opacity=0.7))
+			opacity=1))
 
 	]
 	fig=go1.Figure(data=data)
@@ -271,6 +275,8 @@ def update_output(contents, filename,k):
 			'border':'1px solid black',
 			'font-size':'1.2em'
 			},
+            filter_action="native",
+            sort_action="native",
 			style_data_conditional=[
 			{
 			'if': {
